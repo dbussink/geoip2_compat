@@ -1,0 +1,5 @@
+*.bundle
+*.so
+test/*.mmdb
+tmp/
+*.gem
