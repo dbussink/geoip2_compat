@@ -140,6 +140,7 @@ static void geoip2_compat_free(MMDB_s *mmdb)
 static VALUE geoip2_compat_allocate(VALUE klass)
 {
   MMDB_s* mmdb = ruby_xmalloc(sizeof(MMDB_s));
+  mmdb->file_content = NULL;
   return Data_Wrap_Struct(klass, NULL, geoip2_compat_free, mmdb);
 }
 

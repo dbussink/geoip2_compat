@@ -8,8 +8,14 @@ class GeoIP2Compat
       @db = GeoIP2Compat.new("test/GeoLite2-City.mmdb")
     end
 
-    def test_initialize
+    def test_initialize_success
       assert_equal "test/GeoLite2-City.mmdb", @db.path
+    end
+
+    def test_initialize_failure
+      assert_raise ArgumentError do
+        GeoIP2Compat.new {}
+      end
     end
 
     def test_lookup_ipv4
