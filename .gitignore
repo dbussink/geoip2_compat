@@ -1,6 +1,5 @@
 *.bundle
 *.so
-ext/libmaxminddb
 test/*.mmdb
 tmp/
 *.gem
