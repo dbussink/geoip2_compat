@@ -8,7 +8,7 @@ RbConfig::MAKEFILE_CONFIG['CC'] = ENV['CC'] if ENV['CC']
 
 ROOT = File.expand_path("../../..", __FILE__)
 
-Dir.chdir("#{ROOT}/vendor/libmaxminddb-0.5.3") do
+Dir.chdir("#{ROOT}/vendor/libmaxminddb-1.0.3") do
   system "./configure", "--prefix", "#{ROOT}/ext/libmaxminddb"
   system "make", "install"
 end

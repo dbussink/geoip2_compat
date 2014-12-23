@@ -19,7 +19,8 @@ task :download do
 end
 
 task :vendor do
-  sh "cd vendor && curl -L https://github.com/maxmind/libmaxminddb/releases/download/0.5.3/libmaxminddb-0.5.3.tar.gz | tar xz"
+  version = "1.0.3"
+  sh "cd vendor && curl -L https://github.com/maxmind/libmaxminddb/releases/download/#{version}/libmaxminddb-#{version}.tar.gz | tar xz"
 end
 
 task default: [:compile, :download, :test]
