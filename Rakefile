@@ -20,7 +20,15 @@ end
 
 task :vendor do
   version = "1.0.3"
-  sh "cd vendor && curl -L https://github.com/maxmind/libmaxminddb/releases/download/#{version}/libmaxminddb-#{version}.tar.gz | tar xz"
+  mkdir_p "tmp/"
+  dir = "tmp/libmaxminddb-#{version}"
+  cd "tmp/" do
+    sh "curl -L https://github.com/maxmind/libmaxminddb/releases/download/#{version}/libmaxminddb-#{version}.tar.gz | tar xz"
+  end
+  cp "#{dir}/src/maxminddb-compat-util.h", "ext/geoip2_compat/maxminddb-compat-util.h"
+  cp "#{dir}/src/maxminddb.c", "ext/geoip2_compat/maxminddb.c"
+  cp "#{dir}/include/maxminddb.h", "ext/geoip2_compat/maxminddb.h"
+  cp "#{dir}/include/maxminddb_config.h.in", "ext/geoip2_compat/maxminddb_config.h"
 end
 
 task default: [:compile, :download, :test]
