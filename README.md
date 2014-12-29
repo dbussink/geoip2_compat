@@ -3,10 +3,6 @@
 Implements the new Maxmind database format while keeping the output
 complatible with https://github.com/mtodd/geoip
 
-## Dependencies
-
-This depends on [libmaxminddb](https://github.com/maxmind/libmaxminddb)
-
 ## Installation
 
 `gem install geoip2_compat`
