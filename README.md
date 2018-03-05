@@ -5,7 +5,8 @@ complatible with https://github.com/mtodd/geoip
 
 ## Dependencies
 
-This depends on [libmaxminddb](https://github.com/maxmind/libmaxminddb)
+[libmaxminddb](https://github.com/maxmind/libmaxminddb) is bundled with the gem.
+This gem doesn't depend on the system library.
 
 ## Installation
 
