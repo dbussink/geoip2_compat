@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <ruby.h>
 #include <ruby/encoding.h>
 
