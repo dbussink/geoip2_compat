@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name         = "geoip2_compat"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
 
   s.licenses     = ["MIT"]
 
