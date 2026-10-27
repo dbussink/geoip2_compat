@@ -5,11 +5,15 @@ class GeoIP2Compat
   class TestGeoIP2Compat < Test::Unit::TestCase
 
     def setup
-      @db = GeoIP2Compat.new("test/GeoLite2-City.mmdb")
+      @db = GeoIP2Compat.new("test/GeoIP2-City-Test.mmdb")
+    end
+
+    def teardown
+      @db.close if @db
     end
 
     def test_initialize_success
-      assert_equal "test/GeoLite2-City.mmdb", @db.path
+      assert_equal "test/GeoIP2-City-Test.mmdb", @db.path
     end
 
     def test_initialize_failure
@@ -20,30 +24,26 @@ class GeoIP2Compat
 
     def test_lookup_ipv4
       res = {
-        :city=>"San Francisco",
+        :city=>"Milton",
         :country_code=>"US",
         :country_name=>"United States",
-        :latitude=>37.7697,
-        :longitude=>-122.3933,
-        :postal_code=>"94107",
-        :region=>"CA",
-        :region_name=>"California",
+        :latitude=>47.2513,
+        :longitude=>-122.3149,
+        :postal_code=>"98354",
+        :region=>"WA",
+        :region_name=>"Washington",
       }
-      assert_equal res, @db.lookup("192.30.252.128")
+      assert_equal res, @db.lookup("216.160.83.56")
     end
 
     def test_lookup_ipv6
       res = {
-        :city=>"Grave",
-        :country_code=>"NL",
-        :country_name=>"Netherlands",
-        :latitude=>51.759,
-        :longitude=>5.7388,
-        :postal_code=>"5361",
-        :region=>"NB",
-        :region_name=>"North Brabant",
+        :country_code=>"JP",
+        :country_name=>"Japan",
+        :latitude=>35.68536,
+        :longitude=>139.75309,
       }
-      assert_equal res, @db.lookup("2001:888:0:1::888")
+      assert_equal res, @db.lookup("2001:218::")
     end
   end
 end

@@ -11,11 +11,10 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-task :download do
-  file = "test/GeoLite2-City.mmdb"
-  unless File.exist?(file)
-    `curl http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz | gzip -d > #{file}`
-  end
+file "test/GeoIP2-City-Test.mmdb" do |t|
+  # Use the fixture from the vendored libmaxminddb 1.0.3 test suite.
+  url = "https://raw.githubusercontent.com/maxmind/MaxMind-DB/f887fec99eabf6d68746e257b894bae854fefc27/test-data/GeoIP2-City-Test.mmdb"
+  sh "curl", "--fail", "--location", "--remove-on-error", "--output", t.name, url
 end
 
 task :vendor do
@@ -31,4 +30,6 @@ task :vendor do
   cp "#{dir}/include/maxminddb_config.h.in", "ext/geoip2_compat/maxminddb_config.h"
 end
 
-task default: [:compile, :download, :test]
+task download: "test/GeoIP2-City-Test.mmdb"
+task test: [:compile, :download]
+task default: :test

@@ -29,10 +29,31 @@ static void geoip2_compat_internal_close(MMDB_s* mmdb)
   mmdb->file_content = NULL;
 }
 
+static void geoip2_compat_free(void *ptr)
+{
+  MMDB_s *mmdb = ptr;
+  geoip2_compat_internal_close(mmdb);
+  ruby_xfree(mmdb);
+}
+
+static size_t geoip2_compat_memsize(const void *ptr)
+{
+  return sizeof(MMDB_s);
+}
+
+static const rb_data_type_t geoip2_compat_type = {
+  .wrap_struct_name = "GeoIP2Compat",
+  .function = {
+    .dfree = geoip2_compat_free,
+    .dsize = geoip2_compat_memsize,
+  },
+  .flags = RUBY_TYPED_FREE_IMMEDIATELY,
+};
+
 static VALUE geoip2_compat_close(VALUE self)
 {
   MMDB_s *mmdb;
-  Data_Get_Struct(self, MMDB_s, mmdb);
+  TypedData_Get_Struct(self, MMDB_s, &geoip2_compat_type, mmdb);
   geoip2_compat_internal_close(mmdb);
   return self;
 }
@@ -40,7 +61,7 @@ static VALUE geoip2_compat_close(VALUE self)
 static VALUE geoip2_compat_path(VALUE self)
 {
   MMDB_s *mmdb;
-  Data_Get_Struct(self, MMDB_s, mmdb);
+  TypedData_Get_Struct(self, MMDB_s, &geoip2_compat_type, mmdb);
 
   return rb_str_new2(mmdb->filename);
 }
@@ -98,7 +119,7 @@ static VALUE geoip2_compat_lookup(VALUE self, VALUE ip)
 
   char* ip_addr = StringValuePtr(ip);
   MMDB_s *mmdb;
-  Data_Get_Struct(self, MMDB_s, mmdb);
+  TypedData_Get_Struct(self, MMDB_s, &geoip2_compat_type, mmdb);
 
   MMDB_lookup_result_s result =
     MMDB_lookup_string(mmdb, ip_addr, &gai_error, &mmdb_error);
@@ -131,17 +152,10 @@ static VALUE geoip2_compat_lookup(VALUE self, VALUE ip)
   return hash;
 }
 
-static void geoip2_compat_free(MMDB_s *mmdb)
-{
-  geoip2_compat_internal_close(mmdb);
-  ruby_xfree(mmdb);
-}
-
 static VALUE geoip2_compat_allocate(VALUE klass)
 {
-  MMDB_s* mmdb = ruby_xmalloc(sizeof(MMDB_s));
-  mmdb->file_content = NULL;
-  return Data_Wrap_Struct(klass, NULL, geoip2_compat_free, mmdb);
+  MMDB_s *mmdb;
+  return TypedData_Make_Struct(klass, MMDB_s, &geoip2_compat_type, mmdb);
 }
 
 static VALUE geoip2_compat_initialize(VALUE self, VALUE path)
@@ -149,7 +163,7 @@ static VALUE geoip2_compat_initialize(VALUE self, VALUE path)
   Check_Type(path, T_STRING);
   char* db = StringValuePtr(path);
   MMDB_s *mmdb;
-  Data_Get_Struct(self, MMDB_s, mmdb);
+  TypedData_Get_Struct(self, MMDB_s, &geoip2_compat_type, mmdb);
 
   int status = MMDB_open(db, MMDB_MODE_MMAP, mmdb);
 
